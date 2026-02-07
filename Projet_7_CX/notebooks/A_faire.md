@@ -1,0 +1,8 @@
+- Installer docker desktop
+- Faire un dockerfile avec l'api dedans qui marche
+- créer un github
+- créer un github workflow pour build l'image
+- créer un compte azure
+- créer une azure app
+- déployer l'image de github sur azure app
+- avoir l'api qui fonctionne sur azure app
