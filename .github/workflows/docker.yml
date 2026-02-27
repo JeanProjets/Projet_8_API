@@ -39,7 +39,7 @@ jobs:
         run: |
           docker build \
             -t $ACR_NAME.azurecr.io/$IMAGE_REPO:$IMAGE_TAG \
-            .
+            -f Projet_7_API/Dockerfile Projet_7_API
 
       - name: Push image
         run: |
