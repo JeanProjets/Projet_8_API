@@ -15,3 +15,5 @@ A faire:
 - Creer un compte Azure, creer une azure app 
 - Deployer l'image de Github sur Azure app, 
 - Avoir l'API qui fonctionne sur Azure APP
+
+
