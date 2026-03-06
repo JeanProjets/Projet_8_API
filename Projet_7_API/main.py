@@ -4,6 +4,16 @@ from tensorflow.keras.preprocessing.text import tokenizer_from_json
 import json
 import pandas as pd
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+from azure.monitor.opentelemetry import configure_azure_monitor
+import logging
+
+# 1. Initialise la connexion à Azure Monitor
+# Il détectera automatiquement la variable d'environnement APPLICATIONINSIGHTS_CONNECTION_STRING
+configure_azure_monitor()
+
+# 2. Configure le logger standard de Python
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 VOCAB_SIZE = 20000
 MAX_LEN = 50
@@ -33,5 +43,6 @@ async def read_item(text):
         feeling_result = "sad"
     else:
         feeling_result = "happy"
+    logger.info(f"pour le texte {text}, la prediction est {feeling_result}")
     return {"text": text,
             "feeling_result": feeling_result}

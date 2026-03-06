@@ -2,3 +2,4 @@ tensorflow
 pandas
 fastapi
 uvicorn
+azure-monitor-opentelemetry
