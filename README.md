@@ -16,3 +16,7 @@ http://0.0.0.0:8000/docs
 Pour vérifier où mes images docker sont:
 container registries dans la barre de recherche Azure
 predictionsentimentsregistry est mon registry situé dans mes Dépôts Azure
+
+# MLflow
+Pour lancer MLFlow il faut taper 'mlflow server'
+Ensuite, aller à http://127.0.0.1:5000/
