@@ -6,7 +6,7 @@ import pandas as pd
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from azure.monitor.opentelemetry import configure_azure_monitor
 import logging
-
+import mlflow
 # 1. Initialise la connexion à Azure Monitor
 # Il détectera automatiquement la variable d'environnement APPLICATIONINSIGHTS_CONNECTION_STRING
 configure_azure_monitor()
@@ -32,6 +32,7 @@ async def root():
     return {"message": "Hello World"}
 
 @app.get("/feeling_predictions/{text}")
+@mlflow.trace(name="predict_feeling")
 async def read_item(text):
     # On fait la pipeline pour pouvoir appeler le modèle. Le modèle prend un token en entrée et non une phrase 
     X_example = pd.Series([text], name="new_test")
