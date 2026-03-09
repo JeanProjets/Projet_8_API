@@ -4,6 +4,8 @@ import pandas as pd
 
 # 1. Define your base API URL
 base_url = "https://predictionsentiments-azepf7eme8dvftaa.francecentral-01.azurewebsites.net/feeling_predictions/"
+# URL locale pour MLFlow
+#base_url = "http://127.0.0.1:8000/feeling_predictions/"
 
 # 2. Define a list of 10 different sentences (mixing happy and sad to test your model)
 sentences = [

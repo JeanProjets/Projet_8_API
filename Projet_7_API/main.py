@@ -7,6 +7,8 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from azure.monitor.opentelemetry import configure_azure_monitor
 import logging
 import mlflow
+
+mlflow.set_tracking_uri("http://127.0.0.1:5000")
 # 1. Initialise la connexion à Azure Monitor
 # Il détectera automatiquement la variable d'environnement APPLICATIONINSIGHTS_CONNECTION_STRING
 configure_azure_monitor()
