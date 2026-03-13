@@ -7,7 +7,6 @@
 ## Slide 1 : Titre & Introduction
 **Titre :** Anticipation des Bad Buzz sur les Réseaux Sociaux : Approche IA & Deep Learning
 **Sous-titre :** Projet de Prototype pour Air Paradis par Marketing Intelligence Consulting (MIC)
-**Présentateur :** [Votre Nom/Prénom] - AI Engineer
 
 **Points clés à l'oral :**
 - Enjeu vital pour Air Paradis : protéger son image de marque en temps réel.

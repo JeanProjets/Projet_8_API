@@ -1,6 +1,5 @@
 # Détecter les Bad Buzz grâce au Deep Learning et MLOps : Notre Démarche chez MIC
 
-*Par [Votre Nom/Prénom]*
 
 Dans un monde où l'image de marque se joue à la seconde sur les réseaux sociaux, pouvoir anticiper un "bad buzz" est crucial. C'est là que l'intelligence artificielle entre en jeu. Notre équipe chez **Marketing Intelligence Consulting (MIC)** a récemment développé pour la compagnie aérienne **Air Paradis** un système prédictif capable d'analyser le sentiment des tweets en temps réel. 
 
@@ -37,7 +36,7 @@ La révolution du NLP se trouve dans les "Transformers".
 Le développement du modèle n'est que la pointe de l'iceberg. L'essentiel du travail de l'AI Engineer réside dans la mise en production logicielle. L'approche MLOps (Machine Learning Operations) garantit la reproductibilité, le test et le suivi du modèle une fois déployé.
 
 ### A. Tracking et Gestion des Modèles avec MLFlow
-Au lieu de sauvegarder manuellement nos essais avec des noms de fichiers chaotiques, nous avons intégré **MLFlow** (comme on le voit dans notre test [test_ml_flow.py](file:///Users/j/Documents/OC_Inge_IA/Projet_7/Projet_7_CX/test_ml_flow.py)).
+Au lieu de sauvegarder manuellement nos essais avec des noms de fichiers chaotiques, nous avons intégré **MLFlow** (comme on le voit dans notre test [test_ml_flow.py]).
 - **Suivi des Expérimentations (Tracking)** : Chaque entraînement enregistre automatiquement (via `mlflow.autolog()`) les hyperparamètres (taille de vocabulaire, layers...), le temps d'exécution et les métriques de performance (Accuracy, F1-score).
 - **Centralisation** : Les modèles sont versionnés et stockés dans un artifact store structuré, permettant de facilement revenir en arrière ou sélectionner le modèle "Champion".
 
@@ -49,7 +48,7 @@ Au lieu de sauvegarder manuellement nos essais avec des noms de fichiers chaotiq
 ### C. Hébergement sur le Cloud
 Le cœur du MVP est hébergé sur le Cloud Microsoft Azure.
 - Nous avons déployé notre **API sous forme d'une Azure Web App** (Instance Free F1). 
-- Le script [test_api.py](file:///Users/j/Documents/OC_Inge_IA/Projet_7/test_api.py) confirme que l’endpoint `https://predictionsentiments-azepf7eme8dvftaa.francecentral-01.azurewebsites.net/feeling_predictions/{text}` répond avec succès en un temps très court avec le sentiment du tweet !
+- Le script [test_api.py] confirme que l’endpoint `https://predictionsentiments-azepf7eme8dvftaa.francecentral-01.azurewebsites.net/feeling_predictions/{text}` répond avec succès en un temps très court avec le sentiment du tweet !
 
 ---
 
@@ -58,7 +57,7 @@ Le cœur du MVP est hébergé sur le Cloud Microsoft Azure.
 Un modèle en production, soumis aux nouvelles données du monde réel, a tendance à perdre en exactitude dans le temps: c'est le **Data Drift** (dérive des données). Pour y remédier :
 
 ### Traces et Alertes
-Nous avons instrumenté le code de notre FastAPI ([main.py](file:///Users/j/Documents/OC_Inge_IA/Projet_7/Projet_7_API/main.py)) avec **OpenTelemetry et Azure Application Insights**.
+Nous avons instrumenté le code de notre FastAPI ([main.py]) avec **OpenTelemetry et Azure Application Insights**.
 - Chaque prédiction est tracée (ex: `logger.info(f"pour le texte {text}, la prediction est {feeling_result}")`) et envoyée à Azure.
 - Cela nous offre un **dashboard de télémétrie** avec la latence de l'API, les erreurs HTTP, et surtout les logs de prédiction de notre modèle.
 - **Alerting** : Des alertes (SMS/Email) sont configurables sur le portail Azure si un taux d'erreur 500 augmente ou si le volume de requêtes explose.
