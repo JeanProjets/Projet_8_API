@@ -20,3 +20,8 @@ predictionsentimentsregistry est mon registry situé dans mes Dépôts Azure
 # MLflow
 Pour lancer MLFlow il faut taper 'mlflow server'
 Ensuite, aller à http://127.0.0.1:5000/
+
+
+# Lancer l'application
+cd Projet_7_API
+uvicorn main:app --host 0.0.0.0 --port 8000

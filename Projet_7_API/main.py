@@ -7,15 +7,25 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from azure.monitor.opentelemetry import configure_azure_monitor
 import logging
 import mlflow
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+from opencensus.ext.azure.log_exporter import AzureLogHandler
+from fastapi import FastAPI
 
-# 1. Initialise la connexion à Azure Monitor
-# Il détectera automatiquement la variable d'environnement APPLICATIONINSIGHTS_CONNECTION_STRING
-configure_azure_monitor()
+app = FastAPI()
 
-# 2. Configure le logger standard de Python
+
+# Ajouter le handler console pour voir les logs en local
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+
+# Setup logger
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-
+logger.addHandler(AzureLogHandler(
+    connection_string="InstrumentationKey=63f5fb13-6bad-4790-9158-dd15a35dffa9;IngestionEndpoint=https://francecentral-1.in.applicationinsights.azure.com/;LiveEndpoint=https://francecentral.livediagnostics.monitor.azure.com/;ApplicationId=b12b6f69-5163-4e00-a2d0-091bb33efaf2"
+))
+logger.info("test")
 VOCAB_SIZE = 20000
 MAX_LEN = 50
 
@@ -30,6 +40,7 @@ app = FastAPI()
 
 @app.get("/")
 async def root():
+    logger.info(f"test")
     return {"message": "Hello World"}
 
 @app.get("/feeling_predictions/{text}")
