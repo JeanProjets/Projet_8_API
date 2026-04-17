@@ -43,6 +43,9 @@ async def root():
     logger.info(f"test")
     return {"message": "Hello World"}
 
+
+# Faire la même chose mais avec la segmentation
+# Je devrai envoyer une image et qu'il me renvoie le truc
 @app.get("/feeling_predictions/{text}")
 async def read_item(text):
     # On fait la pipeline pour pouvoir appeler le modèle. Le modèle prend un token en entrée et non une phrase 
