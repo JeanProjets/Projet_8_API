@@ -23,5 +23,6 @@ Ensuite, aller à http://127.0.0.1:5000/
 
 
 # Lancer l'application
-cd Projet_7_API
+cd Projet_8_API
 uvicorn main:app --host 0.0.0.0 --port 8000
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload

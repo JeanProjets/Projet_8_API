@@ -10,7 +10,7 @@ permissions:
 
 env:
   ACR_NAME: predictionsentimentsregistry              # e.g. myregistry
-  IMAGE_REPO: predictionsentiments               # e.g. myapp
+  IMAGE_REPO: projet8segmentation               # e.g. myapp
   IMAGE_TAG: latest     # or "latest"
 
 jobs:
