@@ -1,9 +1,9 @@
 from fastapi import FastAPI
-from tensorflow import keras
-from tensorflow.keras.preprocessing.text import tokenizer_from_json
+#from tensorflow import keras
+#from tensorflow.keras.preprocessing.text import tokenizer_from_json
 import json
 import pandas as pd
-from tensorflow.keras.preprocessing.sequence import pad_sequences
+#from tensorflow.keras.preprocessing.sequence import pad_sequences
 from azure.monitor.opentelemetry import configure_azure_monitor
 import logging
 import mlflow

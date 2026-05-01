@@ -1,4 +1,5 @@
-tensorflow
+fastapi==0.128.0
+#tensorflow
 pandas
 fastapi
 uvicorn
