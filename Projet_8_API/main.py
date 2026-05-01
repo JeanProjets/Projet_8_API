@@ -6,7 +6,7 @@ import pandas as pd
 #from tensorflow.keras.preprocessing.sequence import pad_sequences
 from azure.monitor.opentelemetry import configure_azure_monitor
 import logging
-import mlflow
+#import mlflow
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from opencensus.ext.azure.log_exporter import AzureLogHandler
 from fastapi import FastAPI
