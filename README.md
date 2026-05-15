@@ -48,3 +48,14 @@ A faire:
 - Creer un compte Azure, creer une azure app 
 - Deployer l'image de Github sur Azure app, 
 - Avoir l'API qui fonctionne sur Azure APP
+
+# Fonctionnement de main.py
+
+main.py :
+Le modèle est chargé dynamiquement au lancement de l'API via lifespan pour une meilleure gestion de la mémoire.
+Le point de terminaison /segmentation a été mis à jour : il convertit désormais l'image entrante, la redimensionne en 256x512, la normalise, fait la prédiction via notre modèle Keras, et génère un masque coloré basé sur les couleurs Cityscapes.
+L'image du masque est finalement renvoyée via StreamingResponse au format PNG, ce qui est le standard le plus optimisé pour les API d'images avec FastAPI.
+Un point de terminaison /health a été ajouté pour vérifier si l'API est saine et le modèle bien chargé.
+Attention : Comme mentionné dans le Walkthrough, bien que notre modèle soit léger, TensorFlow reste une librairie très lourde en RAM. S'il s'avère que l'API crashe par manque de mémoire sur Render (limite de 512 Mo), il faudra envisager de convertir notre modèle en format TFLite ou ONNX.
+
+Si un jour j'ai un serveur plus puissant et je souhaite changer de modèle il suffira de changer la variable MODEL_PATH = 'best_mobilenet_unet_model.keras' dans le main.py

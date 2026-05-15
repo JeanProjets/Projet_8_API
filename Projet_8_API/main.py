@@ -1,56 +1,104 @@
-from fastapi import FastAPI
-#from tensorflow import keras
-#from tensorflow.keras.preprocessing.text import tokenizer_from_json
-import json
-import pandas as pd
-#from tensorflow.keras.preprocessing.sequence import pad_sequences
-#from azure.monitor.opentelemetry import configure_azure_monitor
+import os
+import io
 import logging
-#import mlflow
-#from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
-#from opencensus.ext.azure.log_exporter import AzureLogHandler
-from fastapi import FastAPI
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import StreamingResponse
 from PIL import Image
-import io
+import numpy as np
 
-app = FastAPI()
-
-
-# Ajouter le handler console pour voir les logs en local
+# Setup logger
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
-
-# Setup logger
 logger = logging.getLogger(__name__)
-"""logger.addHandler(AzureLogHandler(
-    connection_string="InstrumentationKey=63f5fb13-6bad-4790-9158-dd15a35dffa9;IngestionEndpoint=https://francecentral-1.in.applicationinsights.azure.com/;LiveEndpoint=https://francecentral.livediagnostics.monitor.azure.com/;ApplicationId=b12b6f69-5163-4e00-a2d0-091bb33efaf2"
-))"""
-logger.info("test")
 
-app = FastAPI()
+# Note : Le code pour Azure Log Analytics peut être configuré ici
+# en utilisant azure-monitor-opentelemetry (si la clé de connexion est fournie via env)
+# try:
+#     from azure.monitor.opentelemetry import configure_azure_monitor
+#     if "APPLICATIONINSIGHTS_CONNECTION_STRING" in os.environ:
+#         configure_azure_monitor()
+# except ImportError:
+#     pass
+
+CLASSES = ['void', 'flat', 'construction', 'object', 'nature', 'sky', 'human', 'vehicle']
+COLORS = [
+    [0, 0, 0], [128, 64, 128], [70, 70, 70], [153, 153, 153],
+    [107, 142, 35], [70, 130, 180], [220, 20, 60], [0, 0, 142]
+]
+
+# Variables globales pour l'état de l'application
+model = None
+MODEL_PATH = 'best_unet_model.keras'
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global model
+    if os.path.exists(MODEL_PATH):
+        try:
+            os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+            import tensorflow as tf
+            logger.info("⏳ Chargement du modèle Keras...")
+            model = tf.keras.models.load_model(MODEL_PATH, compile=False)
+            logger.info("✅ Modèle chargé avec succès !")
+        except Exception as e:
+            model = None
+            logger.error(f"❌ Erreur critique de TensorFlow : {e}")
+    else:
+        logger.warning(f"⚠️ Modèle introuvable ({MODEL_PATH}). L'API tourne en 'MOCK MODE'.")
+    yield
+    # Nettoyage si nécessaire
+    model = None
+
+app = FastAPI(
+    title="Cityscapes Segmentation API",
+    description="API de segmentation sémantique pour Future Vision Transport",
+    version="1.0",
+    lifespan=lifespan
+)
 
 @app.get("/")
 async def root():
-    logger.info(f"test")
-    return {"message": "Hello World"}
+    return {"message": "Service back-end de prédiction Actif."}
+
+@app.get("/health")
+def health_check():
+    return {"status": "ok", "model_active": model is not None}
 
 @app.post("/segmentation")
 async def segmentation(file: UploadFile = File(...)):
     # Lire l'image envoyée
     image_bytes = await file.read()
-    image = Image.open(io.BytesIO(image_bytes))
+    image = Image.open(io.BytesIO(image_bytes)).convert('RGB')
 
-    # 🔧 Exemple de "segmentation" (ici on fait juste un traitement simple)
-    # Tu peux remplacer par ton modèle ML
-    processed_image = image.convert("L")  # exemple: niveaux de gris
+    IMG_HEIGHT, IMG_WIDTH = 256, 512
+    img_resized = image.resize((IMG_WIDTH, IMG_HEIGHT))
 
+    if model is not None:
+        # Prétraitement de l'image
+        img_array = np.array(img_resized) / 255.0
+        img_batch = np.expand_dims(img_array, axis=0)
+        
+        # Prédiction
+        prediction = model.predict(img_batch, verbose=0)[0]
+        mask_classes = np.argmax(prediction, axis=-1).astype(np.uint8)
+    else:
+        # Mock Mode : générer un masque vide si aucun modèle n'est chargé
+        mask_classes = np.zeros((IMG_HEIGHT, IMG_WIDTH), dtype=np.uint8)
+
+    # Colorisation du masque
+    mask_colored = np.zeros((IMG_HEIGHT, IMG_WIDTH, 3), dtype=np.uint8)
+    for class_id, color in enumerate(COLORS):
+        mask_colored[mask_classes == class_id] = color
+
+    mask_img = Image.fromarray(mask_colored)
+    
     # Convertir l'image en bytes pour la réponse
     img_io = io.BytesIO()
-    processed_image.save(img_io, format="PNG")
+    mask_img.save(img_io, format="PNG")
     img_io.seek(0)
 
     return StreamingResponse(img_io, media_type="image/png")

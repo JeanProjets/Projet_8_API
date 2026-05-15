@@ -1,8 +1,9 @@
 fastapi==0.128.0
-#tensorflow
+tensorflow
 pandas
 uvicorn
 azure-monitor-opentelemetry
+numpy
 #mlflow
 pillow
 python-multipart
